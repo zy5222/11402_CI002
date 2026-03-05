@@ -1,4 +1,4 @@
-# 11402_CI002
+# CI002 A3: C++ Programming Laboratory
 
 ## Course Information
 
