@@ -1,4 +1,4 @@
-# CI002: C++ Programming Laboratory
+# C++ Programming Laboratory
 
 ## Course Information
 
