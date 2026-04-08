@@ -1,69 +1,22 @@
-# UVa 272 -  TEX Quotes
+# UVa 272 - TEX Quotes
 
-## Problem Description
-[<img width="1209" height="846" alt="image" src="https://github.com/user-attachments/assets/37030b58-ca8a-485a-8a52-13fbed45df03" />
-](https://onlinejudge.org/external/2/272.pdf)
+## 1. 題目摘要
+將一般文字中出現的雙引號 `"` 替換為 TEX 排版的格式。
+- 每個對應的雙引號中，第一個（前引號）要替換為兩個連續的左單引號 ` `` `。
+- 第二個（後引號）要替換為兩個連續的右單引號 ` '' `。
 
-## Learning Objectives
-* Understand character-by-character string processing.
-* Implement state-tracking logic using a boolean flag.
-* Practice standard I/O in C++, specifically reading full lines of text including spaces.
+## 2. 解題邏輯
+這題的核心是「狀態紀錄 (State Tracking)」與「字串讀取」：
 
-## Solution Approach
+* **全域狀態追蹤**：
+    設定一個布林變數 `open`（初始為 `true`）來記錄下一個遇到的雙引號是「前引號」還是「後引號」。
+* **逐行與逐字元處理**：
+    - 使用 `getline(cin, str)` 逐行讀取包含空白的字串，直到檔案結束 (EOF)。
+    - 使用 `for` 迴圈遍歷字串中的每一個字元。
+* **字元替換與狀態切換**：
+    - 若遇到 `"`：檢查 `open` 狀態。若為 `true` 則輸出 ` `` `，否則輸出 ` '' `。輸出後，立刻將狀態反轉 (`open = !open`)。
+    - 若遇到其他字元：直接原封不動輸出。
+    - 每處理完一行，記得輸出換行 (`endl`)。
 
-### Algorithm Logic
-1. Initialize a boolean variable `open` to `true`. This acts as a state tracker to determine whether the next encountered quote is an opening quote or a closing quote.
-2. Use a `while` loop with `getline(cin, str)` to read the input line by line until the end of the file (EOF) is reached.
-3. Iterate through each character of the current string `str` using a `for` loop.
-4. Condition Check:
-   * If the character is a double quote (`"`):
-     * If `open` is `true`, output two backticks ( ` `` `).
-     * If `open` is `false`, output two single quotes (`''`).
-     * Toggle the `open` state (`open = !open`).
-5. After processing all characters in the string, output a newline (`cout << endl;`) to maintain the original formatting of the text.
-
-### Key Insights
-* **Global State Tracking**: The boolean variable `open` must be declared outside the `while` loop. This is crucial because a single quoted phrase might span across multiple lines, so the state needs to persist between `getline` iterations.
-* **Preserving Whitespace**: Using `getline()` instead of `cin >>` ensures that spaces and empty lines are read and processed correctly without being skipped.
-   
-## Code Structure
-```
-//272
-#include<bits/stdc++.h>
-using namespace std;
-
-int main(){
- string str;
- bool open = true;
- while(getline(cin,str)){
-  for(int i = 0; i < str.length(); i++){
-   char ch = str[i];
-   if(ch == '"'){
-    if(open){
-     cout << "``";
-    }else{
-     cout << "''";
-    }
-    open = !open;
-   }else{
-    cout << ch;
-   }
-  }
-  cout << endl;
- }
- return 0;
-}
-```
-
-## Complexity Analysis
-* Time Complexity: $O(N)$, where $N$ is the total number of characters in the input file. Every character is processed exactly once inside the nested loop structure.
-* Space Complexity: $O(L)$, where $L$ is the maximum length of a single line in the input. This is because the str variable stores exactly one line of text in memory at any given time.
-
-## Notes & Reflection
-* **What challenges did you face?** Managing the state of the quotes properly when a quoted sentence breaks across multiple lines.
-* **How would you improve this solution?** While <bits/stdc++.h> is convenient for competitive programming, it includes many unnecessary libraries. For cleaner code, explicitly including <iostream> and <string> is generally considered a better practice.
-*  **What did you learn?** How to effectively use a boolean flag to toggle behaviors and safely iterate through strings in C++.
-
-## References
-* **Problem Link**: [UVA 272 - TEX Quotes](https://onlinejudge.org/external/2/272.pdf)
-* **Related concepts**: Boolean flags, string manipulation, getline.
+## 3. 注意事項與筆記
+- **狀態變數的位置**：`bool open = true;` **必須**宣告在 `while` 迴圈的外部。因為引號的開關狀態是延續的，有可能在第一行開啟引號，直到第二行才關閉引號。
